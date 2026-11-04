@@ -18,6 +18,8 @@ c
 c      dimension rij(np,3),v(np),c5z(245),cbasis(245),ccore(245),
       dimension c5z(245),cbasis(245),ccore(245),
      $          crest(245),idx(245,3),fmat(15,3)
+      double precision c5z_base(245),reoh_base,b1_base,roh_base
+      double precision alphaoh_base,deoh_base,phh1_base,phh2_base
        data (idx(i,1),i=1,245)/
      $ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
      $ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -60,7 +62,7 @@ c      dimension rij(np,3),v(np),c5z(245),cbasis(245),ccore(245),
      $ 7, 8, 1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 1, 2, 3,
      $ 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7, 1, 2,
      $ 3, 4, 5, 6, 7/
-       data (c5z(i),i=1,245)/
+       data (c5z_base(i),i=1,245)/
      $ 4.2278462684916D+04, 4.5859382909906D-02, 9.4804986183058D+03,
      $ 7.5485566680955D+02, 1.9865052511496D+03, 4.3768071560862D+02,
      $ 1.4466054104131D+03, 1.3591924557890D+02,-1.4299027252645D+03,
@@ -392,15 +394,21 @@ c      dimension rij(np,3),v(np),c5z(245),cbasis(245),ccore(245),
      $ 0.0000000000000D+00, 0.0000000000000D+00, 0.0000000000000D+00,
      $ 0.0000000000000D+00, 0.0000000000000D+00, 0.0000000000000D+00,
      $ 0.0000000000000D+00, 0.0000000000000D+00/
-       data reoh,thetae,b1,roh,alphaoh,deoh,phh1,phh2/0.958649d0,
+       data reoh_base,thetae,b1_base,roh_base,alphaoh_base,
+     $      deoh_base,phh1_base,phh2_base/0.958649d0,
      $      104.3475d0,2.0d0,0.9519607159623009d0,2.587949757553683d0,
      $      42290.92019288289d0,16.94879431193463d0,12.66426998162947d0/
        data f5z,fbasis,fcore,frest/0.99967788500000d0,
      $      0.15860145369897d0,-1.6351695982132d0,1d0/
-      save
-      data ifirst/0/
-      if(ifirst.eq.0)then
-       ifirst=1
+c     Copy immutable raw parameters before applying the original scaling.
+      c5z=c5z_base
+      reoh=reoh_base
+      b1=b1_base
+      roh=roh_base
+      alphaoh=alphaoh_base
+      deoh=deoh_base
+      phh1=phh1_base
+      phh2=phh2_base
 c       write(6,1)
     1  format(/1x,'pes for h2o',
      $        /1x,'by Harry Partridge and David W. Schwenke',
@@ -456,7 +464,6 @@ c
        roh=roh/0.529177249d0
        alphaoh=alphaoh*0.529177249d0
        c5z(1)=c5z(1)*2d0
-      end if
       do 6 i=1,n
        x1=(rij(i,1)-reoh)/reoh
        x2=(rij(i,2)-reoh)/reoh

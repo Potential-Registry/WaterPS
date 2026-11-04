@@ -23,7 +23,7 @@
            enddo
            rij(k,1) = sqrt(r1)
            rij(k,2) = sqrt(r2)
-           rij(k,3) = acos(CT/rij(k,1)/rij(k,2))
+           rij(k,3) = acos(max(-1d0,min(1d0,CT/rij(k,1)/rij(k,2))))
 
 
         enddo
